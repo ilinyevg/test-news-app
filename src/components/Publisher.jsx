@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Card } from 'semantic-ui-react'
 
 class Publisher extends Component {
@@ -26,6 +27,10 @@ class Publisher extends Component {
       </Card>
     );
   }
+}
+
+Publisher.propTypes = {
+  data: PropTypes.object
 }
 
 export default Publisher;

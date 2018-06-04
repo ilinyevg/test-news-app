@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Container } from 'semantic-ui-react'
-import NewsPage from './components/NewsPage';
+import NewsListPage from './components/NewsListPage';
 import Footer from './components/Footer';
 
 class App extends Component {
@@ -9,7 +9,7 @@ class App extends Component {
       <div>
         <Header className="page_header" as='h2'>News app</Header>
         <Container textAlign="center"> 
-          <NewsPage default="bbc-news"/>
+          <NewsListPage default="bbc-news"/>
         </Container>
         <Footer/>
       </div>

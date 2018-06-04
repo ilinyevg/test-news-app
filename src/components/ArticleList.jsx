@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Icon, Image } from 'semantic-ui-react';
 
 class ArticleList extends Component {
@@ -13,6 +14,12 @@ class ArticleList extends Component {
       }); 
     }
   }
+
+  changeHandler(e, data) {
+    if (typeof this.props.onChange === 'function') {
+        this.props.onChange(e, data);
+    }
+}
 
   formatDate(dateStr) {
     const date = new Date(dateStr);
@@ -29,7 +36,7 @@ class ArticleList extends Component {
         {articles.map((item, i) => {
           return (
             <Card key={i}>
-              <Image src={item.urlToImage} as='a' size='medium' href={item.url} />
+              <Image src={item.urlToImage} size='medium' onClick={(e) => this.changeHandler(e, item)} />
               <Card.Content>
                 <Card.Header>{item.title}</Card.Header>
                 <Card.Meta>
@@ -49,6 +56,11 @@ class ArticleList extends Component {
       </Card.Group>
     );
   }
+}
+
+ArticleList.propTypes = {
+  articles: PropTypes.array,
+  onChange:   PropTypes.func
 }
 
 export default ArticleList

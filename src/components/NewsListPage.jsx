@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import ArticleList from './ArticleList';
 import Publisher from './Publisher'; 
 import { Grid, Label, Dropdown, Input } from 'semantic-ui-react';
 
-class NewsPage extends Component {
+class NewsListPage extends Component {
   constructor(props) { 
     super(props); 
     this.state = {
@@ -14,36 +15,46 @@ class NewsPage extends Component {
       value: this.props.default,
       selectedPublisher: {},
       articles: [],
-      query: ''
+      query: '',
+      sort: 'publishedAt'
     };
     this.queryChange = this.queryChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.getRelevantFromThisPublisher = this.getRelevantFromThisPublisher.bind(this);
     this.apiKey = 'fabf813810044508a72e049672c60937';
     this.apiUrl = `https://newsapi.org/v2/sources?language=en&apiKey=${this.apiKey}`;
   }
 
+  //TO-DO: should be 1 method instead 3
   handleChange(e, data) {
     const value = data.value;
     const selectedPublisher = this.state.data.find(x => x.id === value);
-    this.getArticles(value, this.state.query);
+    this.getArticles(value, this.state.query, this.state.sort);
     this.setState({ value, selectedPublisher });
   }
 
   queryChange(e, data) {
     const value = data.value;
-    this.getArticles(this.state.selectedPublisher, value);
+    this.getArticles(this.state.selectedPublisher, value, this.state.sort);
     this.setState({ query: value });
   }
 
-  getArticles(source, query = '') {
-    let apiUrl = `https://newsapi.org/v2/everything?q=${query}&sources=${source}&apiKey=${this.apiKey}`;
+  getRelevantFromThisPublisher(e, data) {
+    const sort = 'relevancy';
+    this.getArticles(data.source.id, data.title, sort);
+    this.setState({ 
+      selectedPublisher: data.source , 
+      query: data.title, 
+      sort 
+    });
+  }
 
-    // Make HTTP reques with Axios
+  getArticles(source, query = '', sort) {
+    let apiUrl = `https://newsapi.org/v2/everything?q=${query}&sources=${source}&sortBy=${sort}&apiKey=${this.apiKey}`;
+ 
     axios.get(apiUrl)
       .then(res => {
         const articles = res.data.articles;
-        // Set state with result
-        console.log(articles);
         this.setState({ articles: articles });
       })
       .catch(error => {
@@ -51,13 +62,10 @@ class NewsPage extends Component {
       });
   }
 
-  componentWillMount() {
-    // Make HTTP reques with Axios
-    axios.get(this.apiUrl).then(res => {
-      // Set state with result
+  componentWillMount() { 
+    axios.get(this.apiUrl).then(res => { 
       const data = res.data.sources;
-      this.setState({ data, count: data.length }); 
-      //console.log(this.state.value);
+      this.setState({ data, count: data.length });
       const value = this.state.value;
       const selectedPublisher = this.state.data.find(x => x.id === value);
       this.getArticles(value);
@@ -89,10 +97,14 @@ class NewsPage extends Component {
           </Grid.Row>
         </Grid>
         <Publisher data={selectedPublisher} />
-        <ArticleList articles={articles} />
+        <ArticleList articles={articles} onChange={this.getRelevantFromThisPublisher} />
       </div>
     );
   }
 }
 
-export default NewsPage;
+NewsListPage.propTypes = {
+  default: PropTypes.string
+}
+
+export default NewsListPage;
