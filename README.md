@@ -1,4 +1,4 @@
-# newsapi-react-semanticui-app
+# test-news-app
 
 Code Challange: Create News App using NewsAPI with filtering
 
