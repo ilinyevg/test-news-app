@@ -1,0 +1,23 @@
+@import '~semantic-ui-css/semantic.css';
+
+.page_header {
+    background-color: whitesmoke;
+    margin: 0;
+    padding: 10px 0px;
+    text-align: center;
+}
+
+.page_footer {
+    background-color: whitesmoke;
+    margin: 20px 0 0 0;
+    padding: 10px 10px;
+    text-align: center;
+}
+
+.maxWidth {
+    width: 100%;
+}
+
+.withTopMargin {
+    margin-top: 10px;
+}
